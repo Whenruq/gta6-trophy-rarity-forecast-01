@@ -5,7 +5,10 @@ with recency weights, shrink each slope a little toward the cross-trophy median
 slope, then extrapolate to the target with the slope damped over the horizon
 (a trend that ran for two days rarely runs unchanged for four more). The
 quantile spread combines the fit's residual scale, a per-day random-walk term,
-and a trend-break term proportional to the extrapolated move.
+and a trend-break term proportional to the extrapolated move. The spread was
+recalibrated wider after a live check against Exophase's current rates showed
+launch-week dilution moves rates by several logit units in a day — far beyond
+the first calibration's bands.
 
 Deterministic: no randomness, no wall clock, files processed in name order.
 
@@ -33,10 +36,14 @@ Z = [-1.645, -0.674, 0.0, 0.674, 1.645]
 SHRINK_TO_MEDIAN = 0.25   # weight of the cross-trophy median slope in each trophy's slope
 DAMP_HALF_LIFE_H = 72.0   # hours; the trend's pull decays as horizon / (horizon + this)
 MAX_LOGIT_MOVE = 2.5      # cap on the extrapolated logit move
-WALK_SIGMA_PER_SQRT_DAY = 0.40
-TREND_BREAK_FRAC = 0.35   # extra spread as a fraction of the extrapolated move
-SIGMA_FLOOR = 0.15
-SIGMA_CAP = 1.60
+# Spread constants, recalibrated 2026-11-20 against live Exophase reads: launch-week
+# rates move far more than the first calibration allowed (tracked-player growth dilutes
+# hard-trophy rates by several logit units in a day), and pinball loss punishes a narrow
+# miss much harder than a wide hit. Medians are unchanged; only the bands widen.
+WALK_SIGMA_PER_SQRT_DAY = 0.60
+TREND_BREAK_FRAC = 0.45   # extra spread as a fraction of the extrapolated move
+SIGMA_FLOOR = 0.20
+SIGMA_CAP = 2.20
 FALLBACK_RESID = 0.25     # residual scale assumed when a trophy has too few reads to fit
 
 
